@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SaltStack vs Puppet</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+  </head>
+  <style>
+    .smaller {
+        font-size: 0.5em;
+    }
+  </style>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          SaltStack vs Puppet
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-04-18
+        </p>
+      </article>
+      <article>
+        <h3>Configuration Management/Orchestration is Way Cool</h3>
+        <ul>
+	    		<li>Mo' machines, mo' problems.</li>
+	    		<li>Automating and/or scripting repetitive/tedious tasks</li>
+	    		<li><b>Puppet (2005):</b>
+	    		<ul>
+						<li>Config Management tool, written in Ruby</li>
+						<li>Popular + widely used.</li>
+						<li>Ruby-based DSL</li>
+	    		</ul>
+	    		<li><b>Salt (2011):</b>
+	    		<ul>
+						<li>Config Management + Orchestration tool, written in Python</li>
+	        	<li>Relatively new</li>
+            <li>YAML/Jinja</li>
+	    		</ul>
+				</ul>
+      </article>
+			<article style="padding: 40px;">
+				<h3>How Does It Look?</h3>
+	      <br/>	
+				<div style="float: left;"/> 
+	      <b>Puppet</b>
+		      <pre lang="ruby">
+class oddstuff { 
+ package "mutt" {
+  ensure => installed,
+ }
+ file "/home/mrwilson/.muttrc" {
+  source => puppet://muttrc
+ }
+}                                   
+		</pre>
+		</div>
+		<b>Salt</b>
+		<pre lang="yaml">
+oddstuff:
+ pkg.installed:
+  - name: youtube-dl
+ file.managed:
+  - name: /home/mrwilson/.muttrc
+  - source: salt://muttrc
+
+
+
+
+</pre>
+					<ul>
+						<li>DSL vs markup language</li>
+						<li>Puppet feels a lot more like programming</li>
+					</ul>
+
+				</article>
+				<article>
+        	<h3>When Push Comes To Pull</h3>
+        	<ul>
+						<li>Puppet itself has no built-in orchestration tools. MCollective/fabric can enable this.</li>
+						<li>Salt has orchestration capabilities built in.</li>
+						<pre lang="shell">
+$ salt '*.probablyfine.co.uk' state.sls browsers.chrome				
+						</pre>
+						<li> Not just config changes, but running processes/queries on multiple machines simultaneously.</li>
+						<pre lang="shell">
+$ salt '*' postgres.psql_query 'select count(*) from some_table'
+						</pre>
+						<li>Salt uses ZeroMQ to maintain constant (encrypted) connections to the Master.</li>
+				</ul>
+			</article>
+			<article>
+	<h3>So simple, even an idiot can write one!</h3>
+
+		<br />
+		Salt modules are just python scripts with a defined set of rules.
+		<br />
+		<img width="800" src="http://probablyfine.co.uk/images/cabal_install.png"></img>
+		</article>
+			<article>
+				<h3>But what if I hate YAML?</h3>
+      	<ul>
+          	<li>YAML is the default setup for Salt to use when rendering state files, but it's by no means the only one</li>
+						<li>Available with the base install: Jinja, Mako, JSON, and even Python itself.</li>
+        	  <li>Trivial to write your own renderer.</li>
+						<li>Here's one I made earlier!
+							<pre lang="xml">
+&lt;salt&gt;<br/>  &lt;pkg&gt;<br/>    &lt;name&gt;mutt&lt;/name&gt;<br/>    &lt;installed&gt;true&lt;/installed&gt;<br/>  &lt;/pkg&gt;<br/>&lt;/salt&gt;
+							</pre>
+						</li>
+      	</ul>
+      </article>
+			<article>
+				<h3>Integration with Other Tools</h3>
+      	<ul>
+          	<li>Vagrant is a tool for provisioning VMs</li>
+						<li>Both puppet and salt are able to tie into vagrant, through native support and Salty-Vagrant respectively.</li>
+        	  <li>Both have the abilty to run masterless. Salt has <i>salt-call</i> and puppet has <i>apply --modulepath</i></li>
+						<li>Multi-master setups: Puppet supports this natively, Salt sort of has it in <i>Syndic</i></li>
+			</ul>
+      </article>
+			<article>
+				<h3>A pinch of Salt</h3>
+      	<ul>
+          	<li>Salt is probably not the configuration/orchestration panacea</li>
+						<li>But it is an interesting spin on a solution</li>
+						<li>Open Source
+ 							<ul>
+									<li>Apache Licence</li>
+									<li>All source code on Github</li>
+									<li>A "vibrant and active community"</li>
+							</ul>
+						</li>
+				</ul>
+      </article>
+		</section>
+  </body>
+</html>
