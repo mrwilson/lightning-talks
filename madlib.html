@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MADlib</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+  </head>
+  <style>
+    .smaller {
+        font-size: 0.5em;
+    }
+  </style>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          MADlib
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-04-04
+        </p>
+      </article>
+      <article>
+        <h3>Analytics is Way Cool</h3>
+        <ul>
+	    <li>Data is everywhere.</li>
+            <li>According to Wikipedia, "the discovery and communication of meaningful patterns in data."</li>
+            <li>Machine learning: Given what we know, what do we think will happen?</li>
+            <li>What if the processing could all be done inside the database?</li>
+	    <li>MADlib: "an open-source library for scalable in-database analytics"</li>
+        </ul>
+      </article>
+      <article>
+        <h3>MADlibs: In-database analytics</h3>
+        <ul>
+            <li>MAD: "Magnetic, Agile, Deep". No, I don't know either.</li>
+ 	    <li>We can:
+ 		<ul>
+			<li>Create models from training data.</li>
+			<li>Test/evaluate test data from our new models.</li>
+			<li>Multinomial Regression, Decision Trees, Random Forest</li>
+		</ul>
+	    </li>
+	    <li>Supports PostgreSQL + Greenplum</li>
+	    <li>Entirely open-source</li>
+	    <li>Excellent algorithm documentation, but an <i>almost</i> entirely useless installation guide</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Implementation</h3>
+        <ul>
+            <li>Python/C++
+                <ul>
+                    <li>Python (via PL/Python procedural language)
+                    <li>C++ for the under-the-hood magic
+                </ul>
+            </li>
+            <li>Comes with an "installer" to add the schema.</li>
+	    <li>GreenPlum can run the processing on multi-node setups.</li>
+	    <li>Side note: plv8 is pretty cool too</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Example code</h3>
+	<p>
+		<pre lang="sql">
+create table input_data (foo int, bar int, baz int);
+copy input_data from '/home/mrwilson/foobarbaz.csv';
+set search_path to madlib, "$user", public;
+select(
+	linregr(baz, array[foo,bar])).* 
+from input_data;
+		</pre>
+	</p>
+	Then we get output like this:
+	<p>
+	<pre>
+-[ RECORD 1 ]+--------------------
+coef         | {1.23456789, 9.87654321}
+r2           | 0.1357924680
+std_err      | {0.2358132134}
+t_stats      | {17.369369369369}
+p_values     | {0}
+condition_no | 1
+	</pre>
+	</p>
+      </article>
+      <article>
+      <h3>How do I get MADlib?</h3>
+      <ul>
+          <li><a href="http://madlib.net/">They have a website</a>
+          <li>Binary packages for Mac OS X and CentOS/RedHat (64-bit only)</li>
+          <li>You can <i>try</i> to build from source, but it's literally impossible</li>
+	  <li>Complete source code on <a href="https://github.com/madlib/madlib"></a></li>
+      </ul>
+      </article>
+    </section>
+  </body>
+</html>
