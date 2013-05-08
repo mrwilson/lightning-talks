@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vagrant</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+    <style> .smaller { font-size: 0.5em;}</style>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          Vagrant
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-05-16
+        </p>
+      </article>
+      <article>
+        <h3>Virtualisation is Way Cool</h3>
+        <ul>
+          <li>Throwing hardware at a problem until it goes away.</li>
+	    		<li>Solution: Create virtual machines, either manually (VMWare, VirtualBox) or in the cloud (AWS).</li>
+          <li>How about creating <i>and</i> provisioning a new virtual machine?</li>
+          <li>A development environment?</li>
+          <li>An entire production system?</li>
+				</ul>
+      </article>
+      <article>
+        <h3>Vagrant: A tool for setting up/provisioning VMs</h3>
+        <ul>
+          <li>Written in Ruby</li>
+          <li>Configured with a <i>Vagrantfile</i> (which is just Ruby)</li>
+          <li>Add a new Vagrant "box" with
+            <pre lang="shell">$ vagrant box add &lt;boxname&gt; http://theinternet/example.box</pre>
+          <li>Starting a new VM: <pre style="width: 500px;" lang="shell">$ vagrant up</pre>
+          </li>
+          <li>Providers: VirtualBox (plugins for VMWare, AWS).</li>
+          <li>Provisioners: Chef, Puppet, Ansible (plugin for Salt).</li>
+        </ul> 
+      </article>
+      <article>
+        <h3>Example Project</h3>
+        <p>Simple Spring webapp, backed onto MySQL</p>
+        <p>Project Structure:</p>
+        <br/>
+        <img src="http://probablyfine.co.uk/images/vagrant-layout.png"></img>
+        <p>This example is running masterless Salt for setup.</li>
+      </article>
+			<article>
+				<h3>What is a Vagrantfile?</h3>
+	      <br/>	
+	      <b>Example Vagrantfile</b>
+		    <pre lang="ruby">
+Vagrant.configure("2") do |config|
+  config.vm.box = "precise32"
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
+  config.vm.synced_folder "salt/roots/", "/srv/"
+  
+  config.vm.provision :salt do |salt|
+    salt.minion_config = "salt/minion.conf"
+    salt.run_highstate = true
+  end
+end
+        </pre>
+				<ul>
+          <li>Using the <i>salty-vagrant</i> plugin to provision with Salt.</li>
+				  <li>Defaults to VirtualBox</li>
+				</ul>
+			</article>
+      <article>
+        <h3>Interacting with the Vagrant VM</h3>
+        <ul>
+          <li>Port 22 is forwarded to 2222 on the host machine by default</li>
+          <li>Networking can be configured through vagrant, or through the provider</li>
+          <li>SSHing to the VM is wrapped by vagrant
+            <pre style="width: 500px;" lang="shell">$ vagrant ssh</pre>
+          </li>
+          <li><i>vagrant ssh</i> logs you in as "vagrant" (passwordless, with <i>sudo</i> privileges)</li>
+        </ul>        
+      </article>
+      <article>
+        <h3>Another Use: Development environments</h3>
+        <br/>
+        Some believe that it's a good idea to use virtual machines for development, instead of individual workstations.
+        <ul>
+          <li>Reduces the variance between development and production: dev machines are effectively copies of prod machines.</li>
+          <li>Combining <i>vagrant suspend</i> with a terminal multiplexer (tmux/screen) can persist terminal sessions indefinitely</li>
+        </ul>
+  
+      </article>
+			<article>
+				<h3>Vagrancy: Recap and a few tricks</h3>
+      	<ul>
+          	<li>Vagrant aims to remove the twists from setting up VMs, which it does quite well</li>
+            <li>Getting it to run can be a little fiddly - kernel sources are needed</li>
+            <li>All things considered, a neat and useful piece of tech</li>
+            <li>Example project available at my <a href="https://github.com/mrwilson/vagrant-demo">github</a></li>
+				</ul>
+      </article>
+		</section>
+  </body>
+</html>
