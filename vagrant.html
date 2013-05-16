@@ -21,17 +21,22 @@
       <article>
         <h3>Virtualisation is Way Cool</h3>
         <ul>
-          <li>Throwing hardware at a problem until it goes away.</li>
-	    		<li>Solution: Create virtual machines, either manually (VMWare, VirtualBox) or in the cloud (AWS).</li>
-          <li>How about creating <i>and</i> provisioning a new virtual machine?</li>
-          <li>A development environment?</li>
-          <li>An entire production system?</li>
+          <li>We have a problem. Let's throw hardware at it until it goes away.</li>
+          <li>Virtual machines make this easier. Popular options like VMWare, VirtualBox, AWS.</li>
+          <li><b>Ideal properties:</b>
+          <br/>
+          <ul>
+            <li>Use your CM system of choice and provision a new virtual machine automatically.</li>
+            <li>Support multiple virtual machines simultaneously.</li>
+          </ul>
+          <li><b>Why?</b> Reduction in system-wide variance and homogenous workflow.</li>
+          </li>
 				</ul>
       </article>
       <article>
         <h3>Vagrant: A tool for setting up/provisioning VMs</h3>
         <ul>
-          <li>Written in Ruby</li>
+          <li>"The Cloud" but on your own machine - Mitchell Hashimoto </li>
           <li>Configured with a <i>Vagrantfile</i> (which is just Ruby)</li>
           <li>Add a new Vagrant "box" with
             <pre lang="shell">$ vagrant box add &lt;boxname&gt; http://theinternet/example.box</pre>
@@ -50,7 +55,7 @@
         <p>This example is running masterless Salt for setup.</li>
       </article>
 			<article>
-				<h3>What is a Vagrantfile?</h3>
+				<h3>The Vagrantfile</h3>
 	      <br/>	
 	      <b>Example Vagrantfile</b>
 		    <pre lang="ruby">
@@ -74,7 +79,6 @@ end
         <h3>Interacting with the Vagrant VM</h3>
         <ul>
           <li>Port 22 is forwarded to 2222 on the host machine by default</li>
-          <li>Networking can be configured through vagrant, or through the provider</li>
           <li>SSHing to the VM is wrapped by vagrant
             <pre style="width: 500px;" lang="shell">$ vagrant ssh</pre>
           </li>
@@ -82,14 +86,15 @@ end
         </ul>        
       </article>
       <article>
-        <h3>Another Use: Development environments</h3>
+        <h3>Vagrant as a Virtual Dev Environment</h3>
         <br/>
         Some believe that it's a good idea to use virtual machines for development, instead of individual workstations.
         <ul>
-          <li>Reduces the variance between development and production: dev machines are effectively copies of prod machines.</li>
+          <li>Dev is a copy of prod, as far as possible.</li>
           <li>Combining <i>vagrant suspend</i> with a terminal multiplexer (tmux/screen) can persist terminal sessions indefinitely</li>
+          <li>Sometimes development machines can be slow to provision (30 minutes or more).</li>
+          <li>Hashimoto believes in a 2-run puppet provisioning and packaging the vagrant box after the first stage.</li>
         </ul>
-  
       </article>
 			<article>
 				<h3>Vagrancy: Recap and a few tricks</h3>
