@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Puppet Experimental Parser</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+    <style> .smaller { font-size: 0.5em;}</style>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          Puppet 3.2 - Experimental Parser
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-06-12
+        </p>
+      </article>
+      <article>
+        <h3>The Future's Bright</h3>
+        <ul>
+          <li>Puppet is a widely used configuration management tool.</li>
+          <li>Version 3.2 contains an additional parser</li>
+          <li>The reimplementation of the parser is an attempt to expand the scope of the language, and fix "warts"</li>
+          <li>Move from a non-expression-based grammar to an EBG</li>
+          <li>Fully backwards compatible.</li>
+          <li>Either add <i>parser = future</i> to the puppetmaster config, or run <i>puppet apply --parser future</i>
+          </li>
+				</ul>
+      </article>
+      <article>
+        <h3>Lambda Functions</h3>
+        <ul>
+          <li>Almost all sensible modern languages have lambda functions as part of the syntax.</li>
+          <li>Puppet adopts the ruby-like syntax for these functions</li>
+          <li>Example
+            <pre lang="ruby">
+$things = ["foo", "bar", "baz"]
+$things.each |$thing| { notice $thing }
+            </pre>
+          </li>
+          <li>Available are <i>each</i>,<i>collect</i>, <i>reduce</i>, and other standard functional operations.</li> 
+      </article>
+      <article>
+        <h3>Other features</h3>
+        <ul>
+          <li>Arrays and hashes are now allowed “everywhere”</li>
+          <pre lang="ruby">
+notice(["foo", "bar", "baz"][2]) // ... Scope(Class[main]): baz
+          </pre>
+          <li>Array operations too!</li>
+          <pre lang="ruby">
+["foo","bar"] + ["baz","zap"] // ... ["foo","bar","baz","zap"]
+{"foo" => 1} + {"bar" => 2}   // ... {"foo" => 1, "bar" => 2}
+          </pre>
+          <li>Function interpolation</li>
+          <pre lang="ruby">
+notice "RN: ${fqdn_rand(30)}" // .. Scope(Class[main]): RN: 9
+          </pre>
+        </ul>
+      </article>
+      <article>
+        <h3>Closing Remarks</h3>
+        <ul>
+          <li>Improved error reporting.</li>
+          <li>Iterate new features, but not break backwards compatibility<li>
+          <li>More "language-like", which some people like</li>
+          <li>Interesting to play with before it becomes integrated</li>
+        </ul>
+      </article>
+		</section>
+  </body>
+</html>
