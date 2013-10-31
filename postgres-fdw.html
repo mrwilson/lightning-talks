@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Foreign Data Wrappers in PostgreSQL</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+    <style> .smaller { font-size: 0.5em;}</style>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          Foreign Data Wrappers in PostgreSQL
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-10-31
+        </p>
+      </article>
+      <article>
+        <ul class="build">
+          <li>The year is 2003. Malta joins the EU, Saddam Hussein is captured in Tikrit, Iraq.</li>
+          <img style="width: 50%; height: 50%;" src="http://upload.wikimedia.org/wikipedia/commons/6/6a/Civil_Ensign_of_Malta.svg"></img>
+          <img style="width: 30%; height: 30%;" src="http://upload.wikimedia.org/wikipedia/commons/f/f6/Saddam_Hussein_at_trial,_July_2004-edit1.JPEG"></img>
+          <li>But, more importantly, SQL/MED is approved as part of SQL standard.</li>
+				</ul>
+      </article>
+      <article>
+        <ul class="build">
+          <li>SQL/MED defines foreign-data wrappers and datalink types. PostgreSQL has implemented SQL/MED in 9.1, more in 9.2</li>
+          <li>Awesome, right? Only if you like writing C from a badly documented yet incredibly wordy API.</li>
+          <li>Multicorn is a python library (and PostgreSQL extension) that takes care of all the heavy lifting for us.</li>
+        </ul>
+      </article>
+      <article class="smaller">
+        <ul class="build">
+          <pre lang="python">
+from multicorn import ForeignDataWrapper
+
+class ConstantForeignDataWrapper(ForeignDataWrapper):
+
+    def __init__(self, options, columns):
+        super(ConstantForeignDataWrapper, self).__init__(options, columns)
+        self.columns = columns
+
+    def execute(self, quals, columns):
+        line = {}
+        for column_name in self.columns:
+            line[column_name] = '%s %s' % (column_name, index)
+        yield line
+          </pre>
+          <pre lang="sql">
+CREATE SERVER srv FOREIGN DATA WRAPPER multicorn OPTIONS (
+    wrapper 'python.module.name.MyFdw'
+);
+
+CREATE FOREIGN TABLE example (
+  column1 INTEGER
+) SERVER srv OPTIONS (
+  key 'value'
+);
+          </pre>
+        </ul>
+      </article>
+      <article>
+        <h3>Demonstration!</h3>
+        <ul class="build">
+          <li>PostgreSQL talking to Facebook's FQL api, via a multicorn wrapper.</li>
+          <img style="display: block; margin-left: auto; margin-right: auto;" src="images/faceql.jpg"></img>
+        </ul>
+      </article>
+		</section>
+  </body>
+</html>
