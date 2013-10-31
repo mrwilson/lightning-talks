@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Packer</title>
+    <meta charset='utf-8'>
+    <script type="text/javascript" src="http://html5slides.googlecode.com/svn/trunk/slides.js"></script>
+    <style> .smaller { font-size: 0.5em;}</style>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular'>
+      <article>
+        <h1>
+          Packer
+        </h1>
+        <p>
+          Alex W
+          <br>
+          2013-07-11
+        </p>
+      </article>
+      <article>
+        <h3>Uniformity is Way Cool</h3>
+        <ul>
+            <li>Mitchell Hashimoto has been <i>very</i> busy.</li>
+            <li>"I want to make Vagrant better [...] to dedicate my time to the product, its ecosystem, and its users." - MH</li>
+            <li>Packer: turning a single base ISO into multiple different machine images.</li>
+            <li>Heterogenous systems are usually more effort to maintain, and should be <strike>stamped out</strike> gently brought in line to make things easier.</li>
+				</ul>
+      </article>
+      <article>
+        <h3>Packer: From ISOs, upwards</h3>
+        <ul>
+          <li>Simple JSON config</li>
+            <pre lang="json">
+{ 
+  "builders": [{
+    "type": "virtualbox",
+    "guest_os_type": "RedHat_64",
+    "iso_url": "/path/to/isos/example.iso",
+    "iso_md5": "goodthingmd5issecure",
+    "ssh_username": "packer",
+    "ssh_wait_timeout": "5m"
+  }]
+}
+        </pre>
+        <li>Loads more customisation available at "runtime"</li>
+        </ul> 
+      </article>
+      <article>
+        <h3>Human input "dsl"</h3>
+        <ul>
+          <li>Installers sometimes need keyboard input</li>
+          <li>Packer offers a "dsl" for this input to be made programmatically. Example: </li>
+          <pre lang="json">
+{
+  "builders" : [{
+      ...
+      "boot_command" : [
+        "&lt;tab&gt;&lt;wait5&gt;",
+        " ks=http://theinternet/kickstart.ks",
+        "&lt;enter&gt;"
+      ]
+  }]
+}
+          </pre>
+        </ul>
+      </article>
+      <article>
+        <h3>Supporting Vagrant: How Packer uses postprocessors</h3>
+        <ul>
+          <li>Being a <i>HashiCorp</i> product, it plays very nicely with Vagrant.</li>
+          <li>Optionally create Vagrant boxes for each builder in your config.</li>
+          <li>Other postprocessors are available, such as <i>compress</i> and <i>upload</i></li>
+          <pre lang="json">
+{
+  "post-processors": ["vagrant"]
+}
+          </pre>
+          <li>Trivial to write your own, it's just implementing an interface.</li>
+        </ul>        
+      </article>
+			<article>
+				<h3>Why would I use Packer?</h3>
+      	<ul>
+            <li>According to his Twitter, Hashimoto is "automation-obsessed".</li>
+            <li>Another piece in the pipeline from empty systems to production systems.</li>
+            <li>Written in Go, so it's automatically cool. </li>
+            <li>I use it!</li>
+				</ul>
+      </article>
+		</section>
+  </body>
+</html>
